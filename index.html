@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PizzaMath - Pizza Dough Math That Holds Up</title>
+<meta name="description" content="Dough ball weight by size and style, baker's percentages from total dough, yeast by ferment time, sauce and cheese by area, pies per batch - honest numbers for pizza night.">
+<link rel="canonical" href="https://ilanis-agent.github.io/pizzamath/">
+<meta property="og:title" content="PizzaMath - Pizza Dough Math That Holds Up">
+<meta property="og:description" content="Dough ball weight by size and style, baker's percentages from total dough, yeast by ferment time, sauce and cheese by area, pies per batch - honest numbers for pizza night.">
+<meta property="og:url" content="https://ilanis-agent.github.io/pizzamath/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#8a2a12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8D%95%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#1c0f0c; --card:#281510; --ink:#f7ece2; --muted:#cbaa94;
+  --accent:#e86a3a; --accent2:#f2c14e; --line:#4d2e20; --good:#8fd18a; --warn:#f2c14e; --bad:#e86a5a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:1rem}
+.wrap{max-width:760px;margin:0 auto}
+header{text-align:center;padding:1.6rem 0 1.2rem}
+h1{font-size:2.1rem;color:var(--accent2);letter-spacing:.5px}
+.tag{color:var(--muted);margin-top:.3rem;font-size:.98rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.2rem;margin:1rem 0}
+.card h2{font-size:1.05rem;color:var(--accent);margin-bottom:.7rem}
+.row{display:flex;flex-wrap:wrap;gap:.9rem;align-items:flex-end;margin:.5rem 0}
+.field{display:flex;flex-direction:column;gap:.25rem}
+label{font-size:.8rem;color:var(--muted)}
+input,select{background:#180d0a;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:.45rem .6rem;font-size:1rem;width:8.5rem}
+input:focus,select:focus{outline:2px solid var(--accent)}
+button{background:var(--accent);color:#1c0f0c;border:0;border-radius:8px;padding:.5rem 1.1rem;font-size:.95rem;font-weight:700;cursor:pointer}
+button:hover{background:#f0855c}
+.presets{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0 .2rem}
+.presets button{background:transparent;border:1px solid var(--line);color:var(--muted);font-weight:400;padding:.35rem .8rem;font-size:.85rem}
+.presets button:hover{border-color:var(--accent);color:var(--ink)}
+.big{font-size:1.3rem;font-weight:700;color:var(--accent2)}
+.result{margin-top:.6rem;font-size:1rem;min-height:1.4rem}
+.result small{color:var(--muted);display:block;margin-top:.25rem}
+.verdict-ok{color:var(--good)} .verdict-tight{color:var(--warn)} .verdict-bad{color:var(--bad)}
+.era{font-size:.85rem;color:var(--muted);margin-bottom:.6rem;font-style:italic}
+footer{margin:2rem 0 1rem;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem}
+footer code{color:var(--accent)}
+details{margin-top:.4rem} summary{cursor:pointer;color:var(--muted);font-size:.85rem}
+table{border-collapse:collapse;margin-top:.5rem;font-size:.9rem}
+td,th{border:1px solid var(--line);padding:.3rem .6rem;text-align:left}
+th{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>&#127829; PizzaMath</h1>
+<p class="tag">Pizza dough math that holds up. Balls, percentages, ferment - numbers you can plan a pizza night on.</p>
+</header>
+
+<section class="card" id="c-ball">
+<h2>Dough ball weight</h2>
+<p class="era">Ball weight follows pie area, and style sets the grams per square inch. Neapolitan stretches thin; pan goes deep.</p>
+<div class="presets" id="presets-ball"></div>
+<div class="row">
+  <div class="field"><label for="in-diam">pie size (in)</label><input id="in-diam" type="number" min="8" max="18" step="1" value="12"></div>
+  <div class="field"><label for="in-style">style</label>
+    <select id="in-style">
+      <option value="neapolitan">Neapolitan</option>
+      <option value="ny" selected>New York</option>
+      <option value="pan">Pan</option>
+      <option value="detroit">Detroit</option>
+    </select>
+  </div>
+  <div class="field"><label for="in-pies">pies</label><input id="in-pies" type="number" min="1" step="1" value="4"></div>
+</div>
+<button id="btn-ball">Ball math</button>
+<div class="result" id="out-ball"></div>
+</section>
+
+<section class="card" id="c-dough">
+<h2>Dough recipe from total weight</h2>
+<p class="era">Baker's percentages backwards: give it the dough you need, get flour, water, salt and yeast.</p>
+<div class="row">
+  <div class="field"><label for="in-total">total dough (g)</label><input id="in-total" type="number" min="100" step="50" value="1084"></div>
+  <div class="field"><label for="in-hyd">hydration (%)</label><input id="in-hyd" type="number" min="50" max="80" step="1" value="65"></div>
+  <div class="field"><label for="in-ferment">ferment (hours)</label><input id="in-ferment" type="number" min="1" max="96" step="1" value="24"></div>
+</div>
+<button id="btn-dough">Recipe math</button>
+<div class="result" id="out-dough"></div>
+</section>
+
+<section class="card" id="c-topping">
+<h2>Sauce &amp; cheese</h2>
+<p class="era">Toppings scale with area, not diameter. A 16in pie needs nearly double a 12in.</p>
+<div class="row">
+  <div class="field"><label for="in-tdiam">pie size (in)</label><input id="in-tdiam" type="number" min="8" max="18" step="1" value="12"></div>
+</div>
+<button id="btn-topping">Topping math</button>
+<div class="result" id="out-topping"></div>
+</section>
+
+<section class="card" id="c-oven">
+<h2>Oven honesty</h2>
+<p class="era">What each style actually wants from your oven, stated plainly.</p>
+<div class="row">
+  <div class="field"><label for="in-ostyle">style</label>
+    <select id="in-ostyle">
+      <option value="neapolitan">Neapolitan</option>
+      <option value="ny" selected>New York</option>
+      <option value="pan">Pan</option>
+      <option value="detroit">Detroit</option>
+    </select>
+  </div>
+</div>
+<button id="btn-oven">Oven note</button>
+<div class="result" id="out-oven"></div>
+</section>
+
+<section class="card" id="c-why">
+<h2>Why these numbers</h2>
+<details><summary>The assumptions, stated honestly</summary>
+<table>
+<tr><th>Constant</th><th>Value</th><th>Why</th></tr>
+<tr><td>Grams per sq in</td><td>neapolitan 2.2, NY 2.4, pan 3.2</td><td>Style sets crust thickness; a 12in NY pie lands around 270 g</td></tr>
+<tr><td>Hydration</td><td>60-70% typical</td><td>Below 60% the dough fights you; above 70% it fights differently</td></tr>
+<tr><td>Salt</td><td>2.8%</td><td>The classic dough salt rate - flavor and gluten control</td></tr>
+<tr><td>Yeast by time</td><td>2h: 0.6%, 24h: 0.15%, 72h: 0.08%</td><td>Instant yeast percentage shrinks as the ferment stretches; time is flavor</td></tr>
+<tr><td>Toppings</td><td>3 oz sauce, 6 oz cheese per 12in</td><td>Scaled by area - doubling diameter quadruples the pie</td></tr>
+</table>
+<p style="margin-top:.5rem;color:var(--muted);font-size:.85rem">Flour, room temperature and your oven all move these numbers. The dough tells you the truth on the second stretch.</p>
+</details>
+</section>
+
+<footer>
+<p><strong>PizzaMath</strong> - part of the App Factory collection. Honest small tools, one good idea at a time.</p>
+<p>Source: <code>engine.js</code> (pure functions, tested in CI) &middot; <code>app.html</code> (this UI) &middot; <code>README.md</code></p>
+</footer>
+</div>
+</body>
+</html>
